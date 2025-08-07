@@ -1,0 +1,40 @@
+# Carpetas de compilación
+/Debug/
+/Release/
+/.build/
+/bin/
+/obj/
+/out/
+
+# Archivos generados por el compilador y enlazador
+*.axf
+*.map
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+
+# Archivos temporales y de logs
+*.log
+*.tmp
+
+# Configuración interna de Eclipse/MCUXpresso
+.metadata/
+.settings/
+.cproject
+.project
+
+# Archivos de lanzamiento/debug
+*.launch
+
+# Archivos de backup creados por el IDE
+*~
+
+# Archivos específicos de Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Archivos de macOS (si compartís entre sistemas)
+.DS_Store
