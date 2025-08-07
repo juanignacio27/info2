@@ -99,14 +99,17 @@ bool Timer::SetTimer( uint32_t time )
 
 bool Timer::GetTimer( uint32_t &time )
 {
-	bool salida = false;
+       bool salida = false;
 
-	if ( m_tmrHandler )
-	{
-		if ( m_tmrRun )
-			time = TicksToBase( m_tmrRun );
-	}
-	return salida;
+       if ( m_tmrHandler )
+       {
+               if ( m_tmrRun )
+               {
+                       time = TicksToBase( m_tmrRun );
+                       salida = true;
+               }
+       }
+       return salida;
 }
 
 void Timer::StandByTimer( const standby_t accion )
