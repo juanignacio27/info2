@@ -5,37 +5,31 @@
  *      Author: Marcelo
  */
 
-#include <Timer.h>
-#define 	N_TIMERS		30
-
-// inicializar varibles estaticas
-uint8_t Timer::countTimer = 0;
-Timer* timers[N_TIMERS];
+#include "Timer.h"
 
 Timer::Timer()
 {
-	timers[countTimer] = this;
-	countTimer++;
 	m_tmrRun = 0;
 	m_tmrEvent = false;
 	m_tmrStandBy = false;
 
 	m_tmrHandler = nullptr ;
 	m_tmrBase = DEC;
+	InstalarPerifericoTemporizado(this);
+
 }
 
 Timer::Timer( const bases_t base , const Timer_Callback callback )
 {
-	timers[countTimer] = this;
-	countTimer++;
 	m_tmrRun = 0;
 	m_tmrEvent = false;
 	m_tmrStandBy = false;
 
 	m_tmrHandler = callback ;
 	m_tmrBase = base;
-}
+	InstalarPerifericoTemporizado(this);
 
+}
 void Timer::HandlerDelPeriferico( void )
 {
 	if ( m_tmrStandBy == false )
@@ -99,17 +93,14 @@ bool Timer::SetTimer( uint32_t time )
 
 bool Timer::GetTimer( uint32_t &time )
 {
-       bool salida = false;
+	bool salida = false;
 
-       if ( m_tmrHandler )
-       {
-               if ( m_tmrRun )
-               {
-                       time = TicksToBase( m_tmrRun );
-                       salida = true;
-               }
-       }
-       return salida;
+	if ( m_tmrHandler )
+	{
+		if ( m_tmrRun )
+			time = TicksToBase( m_tmrRun );
+	}
+	return salida;
 }
 
 void Timer::StandByTimer( const standby_t accion )
@@ -123,9 +114,7 @@ void Timer::TimerStop( void )
 {
 	m_tmrRun = 0;
 	m_tmrEvent = false ;
-	m_tmrHandler = nullptr ;
 	m_tmrStandBy = 0 ;
-	m_tmrBase = 0;
 	return ;
 }
 

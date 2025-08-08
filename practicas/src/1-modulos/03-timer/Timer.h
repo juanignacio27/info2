@@ -8,10 +8,11 @@
 #ifndef SRC_3_FIRMWARE_TIMER_H_
 #define SRC_3_FIRMWARE_TIMER_H_
 #include "tipos.h"
+#include "perifericotemporizado.h"
 
 typedef void (*Timer_Callback)(void);
 
-class Timer
+class Timer : public PerifericoTemporizado
 {
 	private :
 		volatile uint32_t 	m_tmrRun;
@@ -26,7 +27,7 @@ class Timer
 		enum 	ticks_t 	{ DECIMAS = 100 , SEGUNDOS = 10 , MINUTOS  = 60 };
 		enum 	standby_t 	{ RUN , PAUSE };
 
-		static uint8_t	countTimer ;
+		static uint8_t	m_countTimer ;
 
 		Timer();
 		Timer( const bases_t base , const Timer_Callback callback = nullptr );
@@ -50,5 +51,4 @@ class Timer
 
 };
 
-extern Timer* timers[];
 #endif /* SRC_3_FIRMWARE_TIMER_H_ */
