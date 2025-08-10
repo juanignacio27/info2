@@ -282,5 +282,5 @@ typedef struct {
 /** Peripheral SWM0 base pointer */
 #define SWM0                                     ((SWM_Type *)SWM0_BASE)
 
-#define FREQ_CLOCK	(30000000UL)
+#define FREQ_CLOCK	(12000000UL)
 #endif /* LPC845_H_ */

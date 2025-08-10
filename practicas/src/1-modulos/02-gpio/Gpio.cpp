@@ -41,8 +41,8 @@ const uint8_t IOCON_INDEX_PIO1[] = { 36,37,3,41,42,43,46,49,31,32,55,54,33,34,39
 /***********************************************************************************************************************************
  *** IMPLEMENTACION DE LOS METODODS DE LA CLASE
  **********************************************************************************************************************************/
-Gpio::Gpio ( uint8_t port , uint8_t bit , uint8_t mode , uint8_t direction , uint8_t activity) :
-m_port ( port) , m_bit ( bit ) , m_modo ( mode ) , m_direccion ( direction ) , m_actividad ( activity )
+Gpio::Gpio ( uint8_t port , uint8_t bit , uint8_t mode ,uint8_t activity, uint8_t direction ) :
+m_port ( port) , m_bit ( bit ) , m_modo ( mode ) ,  m_actividad ( activity ), m_direccion ( direction )
 {
 	m_error = OK;
 

@@ -46,8 +46,8 @@ class Gpio : public Outputs ,  public Inputs
 		const 	uint8_t m_port ;
 		const 	uint8_t m_bit ;
 		const 	uint8_t m_modo ;
-				uint8_t m_direccion ;
 		const 	uint8_t m_actividad ;
+				uint8_t m_direccion ;
 				int8_t  m_error ;
 	public:
 		enum port_t			{ PORT0 , PORT1 };
