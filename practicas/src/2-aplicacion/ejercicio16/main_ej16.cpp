@@ -27,10 +27,21 @@ Gpio ret_0(Gpio::PORT0, 21, Gpio::PULLUP, Gpio::LOW, Gpio::INPUT);
 Gpio ret_1(Gpio::PORT0, 22, Gpio::PULLUP, Gpio::LOW, Gpio::INPUT);
 Gpio ret_2(Gpio::PORT0, 23, Gpio::PULLUP, Gpio::LOW, Gpio::INPUT);
 
+Gpio calentador_1(Gpio::PORT0, 0, Gpio::PUSHPULL, Gpio::HIGH, Gpio::OUTPUT);
+Gpio calentador_2(Gpio::PORT0, 1, Gpio::PUSHPULL, Gpio::HIGH, Gpio::OUTPUT);
+Gpio calentador_3(Gpio::PORT0, 2, Gpio::PUSHPULL, Gpio::HIGH, Gpio::OUTPUT);
+
+Gpio termostato(Gpio::PORT0, 4, Gpio::PULLUP, Gpio::LOW, Gpio::INPUT);
+
 Gpio *teclado_scn[] = { &scn_0, &scn_1, &scn_2, &scn_3, &scn_4, nullptr };
 Gpio *teclado_ret[] = { &ret_0, &ret_1, &ret_2, nullptr };
 
 Teclado Keyboard(teclado_ret, teclado_scn);
+
+Timer tempAlarma(Timer::SEG);
+Timer tempSirena(Timer::SEG);
+
+Gpio Sirena(Gpio::PORT0, 3, Gpio::PUSHPULL, Gpio::HIGH, Gpio::OUTPUT);
 
 void handlers(void);
 
@@ -39,7 +50,8 @@ int main(void) {
 	SysTick_Inicializar(1);
 	Potencia potencia = MAXIMA;
 	uint8_t tecla = NO_KEY;
-	uint32_t tiempo = 0;
+	volatile uint32_t tiempo = 0;
+	uint32_t tiempoInicial = 0;
 	while (1) {
 		tecla = Keyboard.GetKey();
 		switch (estadoSeteo) {
@@ -60,10 +72,12 @@ int main(void) {
 				incrementarTiempo(30, tiempo);
 				tempEncRapido();
 			} else if (estadoTempEncRapido()) {
-				iniciarCalentamiento(potencia, tiempo);
+				iniciarCalentamiento(potencia, &tiempo, calentador_1, calentador_2, calentador_3);
+				tiempoInicial = tiempo;
 				estadoSeteo = CALENTANDO;
 			} else if (cancelarPulsado(tecla)) {
-				reset(potencia, tiempo);
+				reset(potencia, tiempo, calentador_1, calentador_2,
+						calentador_3, Sirena);
 				estadoSeteo = INICIO;
 			}
 			break;
@@ -76,7 +90,8 @@ int main(void) {
 				incrementarTiempo(tecla, tiempo);
 				estadoSeteo = TIEMPO;
 			} else if (cancelarPulsado(tecla)) {
-				reset(potencia, tiempo);
+				reset(potencia, tiempo, calentador_1, calentador_2,
+						calentador_3, Sirena);
 				estadoSeteo = INICIO;
 			}
 			break;
@@ -85,23 +100,41 @@ int main(void) {
 			if (numSeleccionado(tecla) && tiempo <= T_MAX) {
 				tiempo *= 10;
 				incrementarTiempo(tecla, tiempo);
-			} else if (encendidoPulsado(
-					tecla) && tiempo <= T_MAX && tiempo >= T_MIN) {
-				iniciarCalentamiento(potencia, tiempo);
+			} else if (encendidoPulsado(tecla) && tiempo <= T_MAX && tiempo >= T_MIN) {
+				iniciarCalentamiento(potencia, &tiempo, calentador_1,
+						calentador_2, calentador_3);
+				tiempoInicial = tiempo;
 				estadoSeteo = CALENTANDO;
 			} else if (tiempo > T_MAX) {
 				resetTiempo(tiempo);
-				//mostrarError();
 			} else if (cancelarPulsado(tecla)) {
-				reset(potencia, tiempo);
+				reset(potencia, tiempo, calentador_1, calentador_2,
+						calentador_3, Sirena);
 				estadoSeteo = INICIO;
 			}
 			break;
 
 		case CALENTANDO:
-			if (cancelarPulsado(tecla)) {
-				reset(potencia, tiempo);
+
+			if (cancelarPulsado(tecla) || !tiempo) {
+				reset(potencia, tiempo, calentador_1, calentador_2,
+						calentador_3, Sirena);
 				estadoSeteo = INICIO;
+			} else if ((termostato.GetPin() == Gpio::OFF) && ((tiempoInicial - tiempo) >= 30)) {
+				estadoSeteo = ALARMA;
+				tempAlarma.TimerStart(5, nullptr, Timer::SEG);
+				tempSirena.TimerStart(1, nullptr, Timer::SEG);
+
+			}
+			break;
+
+		case ALARMA:
+			if(tempAlarma == 0){
+				reset(potencia, tiempo, calentador_1, calentador_2, calentador_3, Sirena);
+				estadoSeteo = INICIO;
+			}else if(tempSirena == 0){
+				tempSirena.TimerStart(1, nullptr, Timer::SEG);
+				Sirena.SetTogglePin();
 			}
 			break;
 		}
@@ -109,9 +142,11 @@ int main(void) {
 	return 0;
 }
 
-void handlers(void){
-	for(int i = 0; i < PerifericoTemporizado::m_countPerifericosTemporizados; i++){
+void handlers(void) {
+	for (int i = 0; i < PerifericoTemporizado::m_countPerifericosTemporizados;
+			i++) {
 		g_perifericosTemporizados[i]->HandlerDelPeriferico();
 	}
+	temp.TmrEvent();
 }
 
