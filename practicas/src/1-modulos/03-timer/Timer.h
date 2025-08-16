@@ -23,8 +23,8 @@ class Timer : public PerifericoTemporizado
 		volatile uint8_t  	m_tmrBase ;
 
 	public:
-		enum 	bases_t 	{ DEC , SEG , MIN };
-		enum 	ticks_t 	{ DECIMAS = 100 , SEGUNDOS = 10 , MINUTOS  = 60 };
+		enum    bases_t         { MICROSEG , MILISEG , SEG , MIN };
+		enum    ticks_t         { MILISEGUNDOS = 1000 , SEGUNDOS = 1000 , MINUTOS  = 60 };
 		enum 	standby_t 	{ RUN , PAUSE };
 
 		static uint8_t	m_countTimer ;

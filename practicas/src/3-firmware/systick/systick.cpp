@@ -50,21 +50,28 @@ void SysTick_InstalarCallBack( void (*callBack)(void) )
 	 sysTickCallback = (volatile void (*)(void))callBack;
 }
 
-uint32_t SysTick_Inicializar( uint32_t ms )
+uint32_t SysTick_Inicializar( uint32_t tiempo , const systick_t base )
 {
-	uint32_t frecuenciaSystick , ticks ;
-	frecuenciaSystick = 1000 / ms;				 	// frecuenciaSystick = 1 / ( ms * 0.001)
+        uint32_t ticks ;
 
-	ticks = FREQ_CLOCK / frecuenciaSystick;  		// ticks = Tsystic / Tclock ;
+        switch ( base )
+        {
+                case SYSTICK_US:
+                        ticks = ( FREQ_CLOCK / 1000000 ) * tiempo;
+                        break;
+                case SYSTICK_MS:
+                        ticks = ( FREQ_CLOCK / 1000 ) * tiempo;
+                        break;
+        }
 
-	if (ticks > MAX_TICKS)
-		return 1 ;          						// Reload value fuera de rango
+        if (ticks > MAX_TICKS)
+                return 1 ;                                                      // Reload value fuera de rango
 
-	SysTick->RELOAD = ticks - 1;  					// Cargamos la Cuenta
+        SysTick->RELOAD = ticks - 1;                                    // Cargamos la Cuenta
 
-	SysTick->CURR = 0;   							// SysTick Counter en 0 para que se recargue
+        SysTick->CURR = 0;                                                      // SysTick Counter en 0 para que se recargue
 
-	SysTick->CTRL = 7;								// ENABLE = 1, TICKINT = 1, CLKSOURCE = 1;
+        SysTick->CTRL = 7;                                                              // ENABLE = 1, TICKINT = 1, CLKSOURCE = 1;
 
-	return 0;
+        return 0;
 }

@@ -46,8 +46,8 @@ Gpio Sirena(Gpio::PORT0, 3, Gpio::PUSHPULL, Gpio::HIGH, Gpio::OUTPUT);
 void handlers(void);
 
 int main(void) {
-	SysTick_InstalarCallBack(handlers);
-	SysTick_Inicializar(1);
+       SysTick_InstalarCallBack(handlers);
+       SysTick_Inicializar(1, SYSTICK_MS);
 	Potencia potencia = MAXIMA;
 	uint8_t tecla = NO_KEY;
 	volatile uint32_t tiempo = 0;

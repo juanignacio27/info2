@@ -13,8 +13,8 @@ Timer::Timer()
 	m_tmrEvent = false;
 	m_tmrStandBy = false;
 
-	m_tmrHandler = nullptr ;
-	m_tmrBase = DEC;
+       m_tmrHandler = nullptr ;
+       m_tmrBase = MILISEG;
 	InstalarPerifericoTemporizado(this);
 
 }
@@ -25,8 +25,8 @@ Timer::Timer( const bases_t base , const Timer_Callback callback )
 	m_tmrEvent = false;
 	m_tmrStandBy = false;
 
-	m_tmrHandler = callback ;
-	m_tmrBase = base;
+       m_tmrHandler = callback ;
+       m_tmrBase = base;
 	InstalarPerifericoTemporizado(this);
 
 }
@@ -171,34 +171,38 @@ Timer::~Timer()
 }
 uint32_t Timer::BaseToticks( uint32_t time )
 {
-	switch ( m_tmrBase )
-	{
-		case DEC:
-			time *= DECIMAS;
-			break;
-		case SEG:
-			time *= DECIMAS * SEGUNDOS;
-			break;
-		case MIN:
-			time *= DECIMAS * SEGUNDOS * MINUTOS ;
-			break;
-	}
-	return time;
+       switch ( m_tmrBase )
+       {
+               case MICROSEG:
+                       break;
+               case MILISEG:
+                       time *= MILISEGUNDOS;
+                       break;
+               case SEG:
+                       time *= MILISEGUNDOS * SEGUNDOS;
+                       break;
+               case MIN:
+                       time *= MILISEGUNDOS * SEGUNDOS * MINUTOS ;
+                       break;
+       }
+       return time;
 }
 
 uint32_t Timer::TicksToBase( uint32_t time ) const
 {
-	switch ( m_tmrBase )
-	{
-		case DEC:
-			time /= DECIMAS;
-			break;
-		case SEG:
-			time /= ( SEGUNDOS * DECIMAS );
-			break;
-		case MIN:
-			time /= ( MINUTOS * SEGUNDOS * DECIMAS );
-			break;
-	}
-	return time;
+       switch ( m_tmrBase )
+       {
+               case MICROSEG:
+                       break;
+               case MILISEG:
+                       time /= MILISEGUNDOS;
+                       break;
+               case SEG:
+                       time /= ( SEGUNDOS * MILISEGUNDOS );
+                       break;
+               case MIN:
+                       time /= ( MINUTOS * SEGUNDOS * MILISEGUNDOS );
+                       break;
+       }
+       return time;
 }
