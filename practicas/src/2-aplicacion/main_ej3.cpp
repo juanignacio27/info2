@@ -27,8 +27,8 @@ void titilar(void);
 void AtenderPerifericosTemporizados(void);
 
 int main(void) {
-	SysTick_InstalarCallBack(AtenderPerifericosTemporizados);
-	SysTick_Inicializar(1);
+       SysTick_InstalarCallBack(AtenderPerifericosTemporizados);
+       SysTick_Inicializar(1, SYSTICK_MS);
 	Led.clr();
 	bool flag = true;
 	while (1) {

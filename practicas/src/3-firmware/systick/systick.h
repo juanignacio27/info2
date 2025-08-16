@@ -22,7 +22,8 @@ using namespace std;
  *** PROTOTIPOS GLOBALES
  **********************************************************************************************************************************/
 void SysTick_InstalarCallBack( void (*callBack)(void) );
-uint32_t SysTick_Inicializar( uint32_t ms );
+enum systick_t { SYSTICK_US , SYSTICK_MS };
+uint32_t SysTick_Inicializar( uint32_t tiempo , const systick_t base );
 
 /***********************************************************************************************************************************
  *** COMPATIBILIDAD CON C PARA SysTick_Handler PROPIA

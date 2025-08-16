@@ -84,8 +84,8 @@ Timer T_Display(Timer::SEG, actualizarDisplay);
 
 volatile uint32_t tiempoDisplay = 0;
 int main(void) {
-	SysTick_InstalarCallBack(handlers);
-	SysTick_Inicializar(1);
+       SysTick_InstalarCallBack(handlers);
+       SysTick_Inicializar(1, SYSTICK_MS);
 	Potencia potencia = MAXIMA;
 	uint8_t tecla = NO_KEY;
 	uint32_t tiempoInicial = 0;
