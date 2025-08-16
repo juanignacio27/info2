@@ -160,6 +160,7 @@ void Timer::TmrEvent ( void )
 	if ( m_tmrEvent )
 	{
 		m_tmrEvent = false ;
+		if(m_tmrHandler)
 		m_tmrHandler ();
 	}
 }

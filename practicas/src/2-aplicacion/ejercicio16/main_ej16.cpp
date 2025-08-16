@@ -12,6 +12,7 @@
 #include "Gpio.h"
 #include "Teclado.h"
 #include "perifericotemporizado.h"
+#include "display7Segmentos.h"
 
 #define T_MAX 8000
 #define T_MIN 5
@@ -41,18 +42,58 @@ Teclado Keyboard(teclado_ret, teclado_scn);
 Timer tempAlarma(Timer::SEG);
 Timer tempSirena(Timer::SEG);
 
+
 Gpio Sirena(Gpio::PORT0, 3, Gpio::PUSHPULL, Gpio::HIGH, Gpio::OUTPUT);
 
-void handlers(void);
+Gpio g_segmento_a( Gpio::PORT1,18,Gpio::PUSHPULL,Gpio::OUTPUT,Gpio::LOW );
+Gpio g_segmento_b( Gpio::PORT0,18,Gpio::PUSHPULL,Gpio::OUTPUT,Gpio::LOW );
+Gpio g_segmento_c( Gpio::PORT0,20,Gpio::PUSHPULL,Gpio::OUTPUT,Gpio::LOW );
+Gpio g_segmento_d( Gpio::PORT0,22,Gpio::PUSHPULL,Gpio::OUTPUT,Gpio::LOW );
+Gpio g_segmento_e( Gpio::PORT0, 0,Gpio::PUSHPULL,Gpio::OUTPUT,Gpio::LOW );
+Gpio g_segmento_f( Gpio::PORT1,19,Gpio::PUSHPULL,Gpio::OUTPUT,Gpio::LOW );
+Gpio g_segmento_g( Gpio::PORT1, 5,Gpio::PUSHPULL,Gpio::OUTPUT,Gpio::LOW );
+Gpio g_segmento_dp( Gpio::PORT0,19,Gpio::PUSHPULL,Gpio::OUTPUT,Gpio::LOW );
+Gpio *g_uC_segmentos[] = { &g_segmento_a,&g_segmento_b ,&g_segmento_c,&g_segmento_d ,
+&g_segmento_e,&g_segmento_f,&g_segmento_g,&g_segmento_dp};
+uint8_t TablaDigitosBCD7seg[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07, 0x7f,0x6f};
+uC_Segmentos uC_segmentos( g_uC_segmentos , TablaDigitosBCD7seg );
 
+Gpio g_dgt0( Gpio::PORT1 , 8 , Gpio::PUSHPULL , Gpio::OUTPUT , Gpio::HIGH );
+Gpio g_dgt1( Gpio::PORT1 , 7 , Gpio::PUSHPULL , Gpio::OUTPUT , Gpio::HIGH );
+Gpio g_dgt2( Gpio::PORT1 , 6 , Gpio::PUSHPULL , Gpio::OUTPUT , Gpio::HIGH );
+Gpio g_dgt3( Gpio::PORT1 , 20 , Gpio::PUSHPULL , Gpio::OUTPUT , Gpio::HIGH );
+Gpio g_dgt4( Gpio::PORT1 , 21 , Gpio::PUSHPULL , Gpio::OUTPUT , Gpio::HIGH );
+Gpio g_dgt5( Gpio::PORT1 , 16 , Gpio::PUSHPULL , Gpio::OUTPUT , Gpio::HIGH );
+Gpio g_dgt6( Gpio::PORT0 , 30 , Gpio::PUSHPULL , Gpio::OUTPUT , Gpio::HIGH );
+Gpio g_dgt7( Gpio::PORT0 , 21 , Gpio::PUSHPULL , Gpio::OUTPUT , Gpio::HIGH );
+Gpio *g_uC_barrido[]={&g_dgt0,&g_dgt1,&g_dgt2,&g_dgt3,&g_dgt4,&g_dgt5,&g_dgt6,&g_dgt7};
+uC_Barrido uC_barrido( g_uC_barrido );
+
+GrupoDeDigitos Grupos[] =
+{
+{ 0 , 4 },
+{-1 , -1 }
+};
+
+Display7Segmentos Display(&uC_segmentos , &uC_barrido , Grupos );
+
+void handlers(void);
+void actualizarDisplay(void);
+
+Timer T_Display(Timer::SEG, actualizarDisplay);
+
+volatile uint32_t tiempoDisplay = 0;
 int main(void) {
 	SysTick_InstalarCallBack(handlers);
 	SysTick_Inicializar(1);
 	Potencia potencia = MAXIMA;
 	uint8_t tecla = NO_KEY;
-	volatile uint32_t tiempo = 0;
 	uint32_t tiempoInicial = 0;
+	uint32_t tiempo = 0;
+	T_Display.TimerStart(1);
 	while (1) {
+		tiempoDisplay = tiempo;
+
 		tecla = Keyboard.GetKey();
 		switch (estadoSeteo) {
 		case INICIO:
@@ -148,5 +189,11 @@ void handlers(void) {
 		g_perifericosTemporizados[i]->HandlerDelPeriferico();
 	}
 	temp.TmrEvent();
+	T_Display.TmrEvent();
+}
+
+void actualizarDisplay(void){
+	T_Display.TimerStart(1);
+	Display.SetDisplay(tiempoDisplay, Display7Segmentos::DSP0);
 }
 

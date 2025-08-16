@@ -15,7 +15,8 @@ void tempEncRapido(void) {
 }
 
 bool estadoTempEncRapido(void) {
-	return (bool) temp;
+        bool finalizado = (bool) temp;
+        return finalizado;
 }
 
 void setPotencia(Potencia p, Potencia &potencia) {
@@ -99,5 +100,7 @@ bool numSeleccionado(uint8_t tecla) {
 	}
 	return retorno;
 }
+
+
 
 

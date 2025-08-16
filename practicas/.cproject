@@ -127,7 +127,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/2-aplicacion/main_ej4.cpp|src/2-aplicacion/main_ej3.cpp|src/2-aplicacion/main_ej2.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/2-aplicacion/ejercicio16/display.cpp|src/2-aplicacion/main_ej4.cpp|src/2-aplicacion/main_ej3.cpp|src/2-aplicacion/main_ej2.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
