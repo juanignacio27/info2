@@ -9,7 +9,7 @@
 #include "Systick.h"
 #include "perifericotemporizado.h"
 
-Gpio led(Gpio::B_PORT0, 18, Gpio::PUSHPULL, Gpio::HIGH, Gpio::OUTPUT);
+Gpio led(Gpio::PORT0, 18, Gpio::PUSHPULL, Gpio::HIGH, Gpio::OUTPUT);
 Ultrasonico ultrasonico(Gpio::PORT0 ,16 ,Gpio::PORT0 ,17);
 
 void Systick_Callback(void);
@@ -19,6 +19,7 @@ int main(void){
 	SysTick_Inicializar(1, SYSTICK_US);
 
 	while(1){
+		led.SetPin();
 		ultrasonico.medir();
 		if(ultrasonico.getDistancia() <= 30){
 			led.SetPin();

@@ -18,7 +18,7 @@ static void TimerErrISR()  { if (g_instance) g_instance->callback_Timer_Error();
 Ultrasonico::Ultrasonico(uint8_t port_echo, uint8_t bit_echo, uint8_t port_trig,
 		uint8_t bit_trig):
 	echo(Intext::PINT0, port_echo, bit_echo, EchoISR),
-	trig(port_trig, bit_trig, Gpio::INACTIVE, Gpio::HIGH, Gpio::OUTPUT),
+	trig(port_trig, bit_trig, Gpio::PUSHPULL, Gpio::HIGH, Gpio::OUTPUT),
 	T_trig(Timer::MICROSEG, TimerTrigISR),
 	T_echo(Timer::MICROSEG, TimerErrISR)
 	{
@@ -58,8 +58,9 @@ void Ultrasonico::callBack_echo(void) {
 		uint32_t d = tiempo/58;
 		setDistancia(d);
 		flag_flanco = Intext::ASCENDENTE;
+		busy = false;
 	}
-	busy = false;
+
 }
 
  void Ultrasonico::setDistancia(uint32_t d) {
