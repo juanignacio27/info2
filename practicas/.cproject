@@ -126,8 +126,19 @@
 							<tool id="com.crt.advproject.tool.debug.debug.1223151616" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.2069152721.1564761677" name="driver.h" rcbsApplicability="disable" resourcePath="src/2-aplicacion/driver.h" toolsToInvoke=""/>
+					<folderInfo id="com.crt.advproject.config.exe.debug.2069152721.1837175143" name="/" resourcePath="src/2-aplicacion/ejercicio16">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.823598054" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.49802901" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.866748023"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.2086800550" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1226547232"/>
+							<tool id="com.crt.advproject.gas.exe.debug.616728945" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1234939743"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.1026790981" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.821282394"/>
+							<tool id="com.crt.advproject.link.exe.debug.1837313124" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1787061562"/>
+							<tool id="com.crt.advproject.tool.debug.debug.1661267013" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1223151616"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/2-aplicacion/ejercicio16/display.cpp|src/2-aplicacion/main_ej4.cpp|src/2-aplicacion/main_ej3.cpp|src/2-aplicacion/main_ej2.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/2-aplicacion/ejercicio16|src/2-aplicacion/driver.h|src/2-aplicacion/driver.cpp|src/2-aplicacion/ejercicio16/display.cpp|src/2-aplicacion/main_ej4.cpp|src/2-aplicacion/main_ej3.cpp|src/2-aplicacion/main_ej2.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
